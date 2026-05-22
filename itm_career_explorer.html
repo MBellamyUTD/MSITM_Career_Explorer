@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITM MS Career Explorer | UT Dallas Naveen Jindal School of Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+/* ── UTD Brand Colors ───────────────────────────────────────────── */
+:root{
+  --utd-green:#154734;
+  --utd-green-mid:#1e6b4e;
+  --utd-green-light:#eaf3ee;
+  --utd-green-pale:#f0f8f3;
+  --utd-orange:#E87722;
+  --utd-orange-light:#fef3e8;
+  --utd-orange-pale:#fff8f2;
+  --slate:#4a5568;
+  --slate-light:#f7f8fa;
+  --border:#dde3e9;
+  --text:#1a202c;
+  --muted:#718096;
+  --white:#ffffff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--slate-light);color:var(--text);font-size:15px;line-height:1.6;min-height:100vh}
+
+/* ── HEADER ── */
+header{background:var(--utd-green);color:white;border-bottom:4px solid var(--utd-orange)}
+.header-inner{max-width:1200px;margin:0 auto;padding:2rem 2rem 1.5rem;display:flex;align-items:flex-start;gap:1.5rem}
+.header-badge{background:var(--utd-orange);color:white;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:3px;white-space:nowrap;margin-top:6px;flex-shrink:0}
+.header-text h1{font-family:'DM Serif Display',serif;font-size:2rem;font-weight:400;line-height:1.2;color:white;margin-bottom:.3rem}
+.header-text p{font-size:13px;color:rgba(255,255,255,.65);font-weight:300}
+.header-text p strong{color:rgba(255,255,255,.9);font-weight:500}
+
+/* ── TOOLBAR ── */
+.toolbar{background:white;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(21,71,52,.08)}
+.toolbar-inner{max-width:1200px;margin:0 auto;padding:.75rem 2rem;display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+.search-wrap{position:relative;flex:1;min-width:200px;max-width:320px}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.search-wrap input{width:100%;padding:7px 12px 7px 34px;border:1.5px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--slate-light);color:var(--text);outline:none;transition:border-color .15s}
+.search-wrap input:focus{border-color:var(--utd-green);background:white}
+.sep{width:1px;height:24px;background:var(--border);margin:0 2px}
+.filter-chip{font-size:12px;font-weight:500;padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:white;color:var(--slate);cursor:pointer;transition:all .15s;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.filter-chip:hover{border-color:var(--utd-green);color:var(--utd-green)}
+.filter-chip.active{background:var(--utd-green);border-color:var(--utd-green);color:white}
+.sort-label{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;margin-left:4px}
+.sort-btn{font-size:12px;font-weight:500;padding:5px 10px;border-radius:5px;border:1.5px solid var(--border);background:white;color:var(--slate);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap}
+.sort-btn:hover{border-color:var(--utd-green);color:var(--utd-green)}
+.sort-btn.active{background:var(--utd-green-pale);border-color:var(--utd-green);color:var(--utd-green);font-weight:600}
+
+/* ── MAIN ── */
+.main{max-width:1200px;margin:0 auto;padding:1.5rem 2rem 3rem}
+.meta-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
+.count-text{font-size:13px;color:var(--muted)}
+.data-note{font-size:11px;color:var(--muted);background:white;border:1px solid var(--border);border-radius:4px;padding:4px 10px}
+.data-note a{color:var(--utd-green);text-decoration:none}
+.data-note a:hover{text-decoration:underline;color:var(--utd-green-mid)}
+
+/* ── CARDS ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:1.5rem}
+.card{background:white;border:1.5px solid var(--border);border-radius:10px;padding:1rem 1.1rem;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .1s;position:relative;overflow:hidden;animation:fadeIn .25s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.card:hover{border-color:#9cbfb0;box-shadow:0 4px 16px rgba(21,71,52,.10);transform:translateY(-1px)}
+.card.selected{border-color:var(--utd-green);box-shadow:0 0 0 3px rgba(21,71,52,.12)}
+.card-cat{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px;padding:2px 7px;border-radius:10px;display:inline-block}
+.card-title{font-size:14px;font-weight:600;color:var(--utd-green);line-height:1.3;margin-bottom:5px}
+.card-salary{font-size:12px;color:var(--slate);margin-bottom:4px}
+.card-growth{font-size:11px;color:var(--muted);line-height:1.4}
+.demand-pill{font-size:10px;font-weight:600;color:var(--utd-orange);background:var(--utd-orange-pale);border:1px solid #f5c99a;border-radius:10px;padding:2px 7px;display:inline-block;margin-top:5px}
+.no-results{text-align:center;padding:3rem 1rem;color:var(--muted);font-size:14px;grid-column:1/-1}
+
+/* ── Category chip + card-top-border colors ── */
+/* Data & AI — UTD green family */
+.cat-data{background:var(--utd-green-light);color:var(--utd-green)}
+.cat-data-border::before{background:var(--utd-green)}
+/* Engineering — teal-green */
+.cat-eng{background:#e3f2ec;color:#0e5c3c}
+.cat-eng-border::before{background:#1a7a55}
+/* Cybersecurity — UTD orange family */
+.cat-cyber{background:var(--utd-orange-light);color:#8a3d00}
+.cat-cyber-border::before{background:var(--utd-orange)}
+/* Management & Strategy — warm olive */
+.cat-mgmt{background:#f4f1e8;color:#5c4b00}
+.cat-mgmt-border::before{background:#b8960a}
+/* Infrastructure — neutral slate */
+.cat-infra{background:#eef1f5;color:#3d5168}
+.cat-infra-border::before{background:#5a7a9c}
+
+/* ── DETAIL PANEL ── */
+#detail-panel{background:white;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem;animation:slideIn .2s ease both}
+@keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.detail-header{background:var(--utd-green);color:white;padding:1.25rem 1.5rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;border-bottom:3px solid var(--utd-orange)}
+.detail-header-left h2{font-family:'DM Serif Display',serif;font-size:1.5rem;font-weight:400;color:white;margin-bottom:3px}
+.detail-header-left .subtitle{font-size:12px;color:rgba(255,255,255,.65);font-weight:300}
+.close-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:white;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0;transition:background .15s}
+.close-btn:hover{background:rgba(255,255,255,.22)}
+.detail-body{padding:1.25rem 1.5rem}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:640px){.detail-grid{grid-template-columns:1fr}}
+.detail-box{background:var(--utd-green-pale);border:1px solid #c9dfd5;border-radius:8px;padding:1rem 1.1rem}
+.detail-box-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--utd-green-mid);margin-bottom:10px}
+
+/* ── Salary bars ── */
+.salary-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.sal-label{font-size:10px;color:var(--muted);flex-shrink:0}
+.sal-track{flex:1;height:7px;background:#d4e8de;border-radius:4px;overflow:hidden}
+.sal-fill{height:100%;border-radius:4px}
+.sal-val{font-size:11px;font-weight:600;color:var(--utd-green);min-width:40px;text-align:right}
+.growth-text{font-size:13px;color:var(--text);margin-bottom:8px;line-height:1.4}
+
+/* ── Tags ── */
+.tag-wrap{display:flex;flex-wrap:wrap;gap:5px}
+.tag{font-size:11px;padding:3px 9px;border-radius:20px;border:1px solid #c9dfd5;color:var(--utd-green);background:white}
+.cert-tag{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--utd-orange-pale);border:1px solid #f5c99a;color:#7a3800;font-weight:500}
+
+/* ── Course table ── */
+.courses-section{margin-top:1rem}
+.courses-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--utd-green-mid);margin-bottom:8px}
+.course-table{width:100%;border-collapse:collapse}
+.course-table tr{border-bottom:1px solid var(--border)}
+.course-table tr:last-child{border-bottom:none}
+.course-table td{padding:7px 6px;vertical-align:middle}
+.tier-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;white-space:nowrap}
+.tier-core{background:var(--utd-green-light);color:var(--utd-green)}
+.tier-biz{background:#e8f4ea;color:#2e6b35}
+.tier-elec{background:var(--utd-orange-pale);color:#7a3800}
+.code-cell{font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap;padding-left:10px}
+.name-cell{font-size:12px;color:var(--text)}
+
+/* ── External links ── */
+.links-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);align-items:center}
+.ext-link{font-size:12px;font-weight:500;color:var(--utd-green);background:white;border:1.5px solid #c9dfd5;border-radius:6px;padding:6px 12px;text-decoration:none;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.ext-link:hover{border-color:var(--utd-green);background:var(--utd-green-pale)}
+.ext-link svg{flex-shrink:0}
+.links-note{font-size:11px;color:var(--muted);font-style:italic;margin-left:auto}
+
+/* ── FOOTER ── */
+footer{background:var(--utd-green);color:rgba(255,255,255,.55);font-size:11px;padding:1.25rem 2rem;text-align:center;line-height:1.7;border-top:3px solid var(--utd-orange)}
+footer a{color:rgba(255,255,255,.75);text-decoration:none}
+footer a:hover{color:white}
+
+/* ── Responsive ── */
+@media(max-width:700px){.header-inner{flex-direction:column;gap:.75rem}.header-text h1{font-size:1.5rem}.main{padding:1rem}.toolbar-inner{padding:.75rem 1rem}}
+
+/* ── TAB NAV ── */
+.tab-nav{max-width:1200px;margin:0 auto;padding:.75rem 2rem 0;display:flex;gap:0;border-bottom:2px solid var(--utd-green)}
+.tab-btn{font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;padding:.6rem 1.4rem;border:none;border-radius:6px 6px 0 0;background:transparent;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap}
+.tab-btn:hover{color:var(--utd-green);background:var(--utd-green-pale)}
+.tab-btn.active{color:var(--utd-green);font-weight:600;border-bottom:3px solid var(--utd-orange);background:white}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* ── PATHWAY MAPS ── */
+.pathways-wrap{max-width:1200px;margin:0 auto;padding:1.5rem 2rem 3rem}
+.pathway-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(540px,1fr));gap:1.25rem;margin-top:1rem}
+@media(max-width:700px){.pathway-grid{grid-template-columns:1fr}}
+.pathway-card{background:white;border:1.5px solid var(--border);border-radius:12px;overflow:hidden}
+.pathway-header{background:var(--utd-green);padding:.9rem 1.25rem;display:flex;align-items:center;gap:.75rem}
+.pathway-header h3{font-size:15px;font-weight:600;color:white;margin:0}
+.pathway-icon{width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.pathway-body{padding:1.1rem 1.25rem}
+.pathway-range{font-size:12px;font-weight:600;color:var(--utd-orange);margin-bottom:.9rem}
+.pathway-steps{display:flex;flex-direction:column;gap:0}
+.step-row{display:flex;align-items:flex-start;gap:.7rem;padding:.55rem 0;border-bottom:.5px solid var(--border)}
+.step-row:last-child{border-bottom:none}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--utd-green);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-content{flex:1}
+.step-title{font-size:13px;font-weight:600;color:var(--utd-green);line-height:1.3}
+.step-meta{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
+.step-salary{font-size:11px;font-weight:600;color:var(--utd-orange);margin-top:2px}
+.step-certs{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.step-cert{font-size:10px;padding:2px 7px;border-radius:10px;background:var(--utd-orange-pale);border:1px solid #f5c99a;color:#7a3800;font-weight:500}
+.pathway-timeline{font-size:11px;color:var(--muted);background:var(--utd-green-pale);border:1px solid #c9dfd5;border-radius:6px;padding:6px 10px;margin-top:.9rem}
+.pathway-timeline strong{color:var(--utd-green)}
+.section-intro{font-size:14px;color:var(--muted);margin-bottom:.25rem;line-height:1.6}
+
+/* ── NEGOTIATION TIPS ── */
+.nego-wrap{max-width:1200px;margin:0 auto;padding:1.5rem 2rem 3rem}
+.nego-intro{background:var(--utd-green-pale);border:1.5px solid #c9dfd5;border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1.25rem}
+.nego-intro p{font-size:14px;color:var(--text);line-height:1.65}
+.nego-intro strong{color:var(--utd-green)}
+.accord-item{background:white;border:1.5px solid var(--border);border-radius:10px;margin-bottom:.6rem;overflow:hidden;transition:border-color .15s}
+.accord-item.open{border-color:#9cbfb0}
+.accord-btn{width:100%;background:none;border:none;padding:.9rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:left}
+.accord-btn:hover{background:var(--utd-green-pale)}
+.accord-label{display:flex;align-items:center;gap:.75rem}
+.accord-num{width:26px;height:26px;border-radius:50%;background:var(--utd-green);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.accord-title{font-size:14px;font-weight:600;color:var(--utd-green)}
+.accord-chevron{font-size:18px;color:var(--utd-green);transition:transform .2s;flex-shrink:0;line-height:1}
+.accord-item.open .accord-chevron{transform:rotate(180deg)}
+.accord-body{display:none;padding:0 1.25rem 1rem 1.25rem}
+.accord-item.open .accord-body{display:block}
+.accord-body p{font-size:14px;color:var(--text);line-height:1.65;margin-bottom:.6rem}
+.accord-body p:last-child{margin-bottom:0}
+.accord-body ul{margin:.4rem 0 .6rem 1.25rem;display:flex;flex-direction:column;gap:.3rem}
+.accord-body ul li{font-size:14px;color:var(--text);line-height:1.5}
+.accord-body .highlight{background:var(--utd-orange-pale);border-left:3px solid var(--utd-orange);border-radius:0 6px 6px 0;padding:.5rem .75rem;font-size:13px;color:var(--text);margin:.6rem 0}
+.accord-body .highlight strong{color:#7a3800}
+.cert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.5rem;margin-top:.6rem}
+.cert-card-sm{background:var(--utd-orange-pale);border:1px solid #f5c99a;border-radius:8px;padding:.5rem .75rem}
+.cert-card-sm .cert-name{font-size:12px;font-weight:600;color:#7a3800}
+.cert-card-sm .cert-impact{font-size:11px;color:var(--muted);margin-top:2px}
+.nego-stat{display:inline-block;background:var(--utd-green);color:white;font-size:12px;font-weight:600;padding:3px 10px;border-radius:12px;margin:.3rem .2rem .3rem 0}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <span class="header-badge">Spring 2026</span>
+    <div class="header-text">
+      <h1>ITM MS Career Explorer</h1>
+      <p><strong>UT Dallas · Naveen Jindal School of Management</strong> &nbsp;·&nbsp; 18 career paths · Texas &amp; Southern U.S. salary data · Recommended degree plans · Verified May 2026</p>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" placeholder="Search roles, skills, certifications…" oninput="render()" aria-label="Search career roles">
+    </div>
+    <div class="sep"></div>
+    <button class="filter-chip active" data-cat="All" onclick="setCategory(this)">All tracks</button>
+    <button class="filter-chip" data-cat="Data &amp; AI" onclick="setCategory(this)">Data &amp; AI</button>
+    <button class="filter-chip" data-cat="Engineering" onclick="setCategory(this)">Engineering</button>
+    <button class="filter-chip" data-cat="Cybersecurity" onclick="setCategory(this)">Cybersecurity</button>
+    <button class="filter-chip" data-cat="Management &amp; Strategy" onclick="setCategory(this)">Mgmt &amp; Strategy</button>
+    <button class="filter-chip" data-cat="Infrastructure" onclick="setCategory(this)">Infrastructure</button>
+    <div class="sep"></div>
+    <span class="sort-label">Sort:</span>
+    <button class="sort-btn active" onclick="setSort('alpha',this)">A–Z</button>
+    <button class="sort-btn" onclick="setSort('salary',this)">Top salary</button>
+    <button class="sort-btn" onclick="setSort('growth',this)">Growth</button>
+  </div>
+</div>
+
+<div style="background:white;border-bottom:2px solid var(--utd-green)">
+  <div class="tab-nav" role="tablist">
+    <button class="tab-btn active" id="tab-roles" role="tab" aria-selected="true" aria-controls="panel-roles" onclick="switchTab('roles')">Career Roles</button>
+    <button class="tab-btn" id="tab-paths" role="tab" aria-selected="false" aria-controls="panel-paths" onclick="switchTab('paths')">Career Pathways</button>
+    <button class="tab-btn" id="tab-nego" role="tab" aria-selected="false" aria-controls="panel-nego" onclick="switchTab('nego')">Negotiation Guide</button>
+  </div>
+</div>
+<div id="panel-roles" class="tab-panel active" role="tabpanel" aria-labelledby="tab-roles">
+<main class="main">
+  <div class="meta-bar">
+    <span class="count-text" id="countLabel"></span>
+    <span class="data-note">Base salaries only · Texas &amp; Southern U.S. · Sources: <a href="https://www.roberthalf.com/us/en/insights/salary-guide/technology" target="_blank" rel="noopener">Robert Half 2026</a>, <a href="https://www.glassdoor.com" target="_blank" rel="noopener">Glassdoor Apr–May 2026</a>, <a href="https://www.bls.gov/ooh/" target="_blank" rel="noopener">BLS OOH</a></span>
+  </div>
+  <div id="detail-panel" style="display:none"></div>
+  <div class="grid" id="cardGrid" role="list" aria-label="Career role cards"></div>
+</main>
+
+</div>
+<div id="panel-paths" class="tab-panel" role="tabpanel" aria-labelledby="tab-paths">
+<div class="pathways-wrap">
+<p class="section-intro">Four common career progressions for MS ITM graduates — each shows the full arc from entry-level to senior leadership, with salary benchmarks, key certifications, and typical timelines. These are illustrative starting points; individual paths vary based on specialization, industry, and experience.</p>
+<div class="pathway-grid">
+
+<div class="pathway-card">
+  <div class="pathway-header">
+    <div class="pathway-icon">📊</div>
+    <h3>Data &amp; AI Track</h3>
+  </div>
+  <div class="pathway-body">
+    <div class="pathway-range">$69K entry → $207K+ senior ceiling</div>
+    <div class="pathway-steps">
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Data / BI Analyst</div>
+          <div class="step-meta">0–3 yrs · SQL, Tableau/Power BI, Python pandas, data storytelling</div>
+          <div class="step-salary">$69K–$90K</div>
+          <div class="step-certs"><span class="step-cert">Google Data Analytics</span><span class="step-cert">Tableau Desktop Specialist</span><span class="step-cert">Microsoft PL-300</span></div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Data Scientist / Data Engineer</div>
+          <div class="step-meta">3–6 yrs · Python ML, Spark, Databricks, cloud data platforms, statistical modeling</div>
+          <div class="step-salary">$104K–$161K</div>
+          <div class="step-certs"><span class="step-cert">AWS Data Engineer Assoc.</span><span class="step-cert">Databricks Certified</span><span class="step-cert">Google Prof. Data Engineer</span></div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">ML / AI Engineer</div>
+          <div class="step-meta">5–8 yrs · PyTorch/TensorFlow, MLOps, LLMs, SageMaker, model deployment</div>
+          <div class="step-salary">$110K–$183K</div>
+          <div class="step-certs"><span class="step-cert">AWS ML Specialty</span><span class="step-cert">Azure AI Engineer</span><span class="step-cert">Google Prof. ML Engineer</span></div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">AI Manager / Director of Data</div>
+          <div class="step-meta">8–12 yrs · Team leadership, AI strategy, executive communication, P&amp;L ownership</div>
+          <div class="step-salary">$155K–$207K+</div>
+          <div class="step-certs"><span class="step-cert">MBA optional</span><span class="step-cert">AWS Solutions Architect</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="pathway-timeline"><strong>Typical timeline:</strong> 5–10 years from analyst to AI Manager · Data Scientist TX avg $161K — 4% above national median (Glassdoor, 3,825 reports)</div>
+  </div>
+</div>
+
+<div class="pathway-card">
+  <div class="pathway-header">
+    <div class="pathway-icon">🔒</div>
+    <h3>Cybersecurity Track</h3>
+  </div>
+  <div class="pathway-body">
+    <div class="pathway-range">$50K entry → $191K+ senior ceiling</div>
+    <div class="pathway-steps">
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">SOC Analyst / IT Security Technician</div>
+          <div class="step-meta">0–2 yrs · Alert triage, SIEM basics, threat monitoring, ticketing</div>
+          <div class="step-salary">$50K–$85K</div>
+          <div class="step-certs"><span class="step-cert">CompTIA Security+</span><span class="step-cert">CompTIA A+</span></div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Cybersecurity / GRC Analyst</div>
+          <div class="step-meta">2–5 yrs · NIST CSF, SOX/HIPAA, vulnerability assessment, IAM, risk frameworks</div>
+          <div class="step-salary">$74K–$130K</div>
+          <div class="step-certs"><span class="step-cert">CySA+</span><span class="step-cert">CISA</span><span class="step-cert">CRISC</span></div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Security Engineer / Cloud Security Engineer</div>
+          <div class="step-meta">5–8 yrs · Zero Trust, cloud security, DevSecOps, incident response leadership</div>
+          <div class="step-salary">$101K–$167K</div>
+          <div class="step-certs"><span class="step-cert">CISSP</span><span class="step-cert">CCSP</span><span class="step-cert">AWS Security Specialty</span></div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Security Architect / CISO</div>
+          <div class="step-meta">8–12 yrs · Enterprise security architecture, executive communication, program ownership</div>
+          <div class="step-salary">$121K–$191K+</div>
+          <div class="step-certs"><span class="step-cert">CISSP + SABSA</span><span class="step-cert">CCSP</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="pathway-timeline"><strong>Typical timeline:</strong> 5–10 years from SOC to Security Architect · DFW avg $130K for Cybersecurity Analyst; San Antonio a major hub (NSA, USAF Cyber Command)</div>
+  </div>
+</div>
+
+<div class="pathway-card">
+  <div class="pathway-header">
+    <div class="pathway-icon">📋</div>
+    <h3>Project &amp; Program Management Track</h3>
+  </div>
+  <div class="pathway-body">
+    <div class="pathway-range">$65K entry → $200K+ senior ceiling</div>
+    <div class="pathway-steps">
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Business / Systems Analyst</div>
+          <div class="step-meta">0–3 yrs · Requirements gathering, process mapping, UAT, JIRA, stakeholder communication</div>
+          <div class="step-salary">$65K–$107K</div>
+          <div class="step-certs"><span class="step-cert">CAPM</span><span class="step-cert">Salesforce Admin</span><span class="step-cert">PMI-PBA</span></div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">IT Project Manager</div>
+          <div class="step-meta">3–7 yrs · PMBOK, Agile/Scrum, risk management, budget tracking, executive reporting</div>
+          <div class="step-salary">$80K–$165K</div>
+          <div class="step-certs"><span class="step-cert">PMP</span><span class="step-cert">PMI-ACP</span><span class="step-cert">Scrum Master</span></div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Program Manager</div>
+          <div class="step-meta">6–10 yrs · Multi-project oversight, portfolio strategy, cross-functional leadership</div>
+          <div class="step-salary">$85K–$175K</div>
+          <div class="step-certs"><span class="step-cert">PgMP</span><span class="step-cert">ITIL 4</span></div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Portfolio Manager / CIO</div>
+          <div class="step-meta">10–15 yrs · Strategic governance, P&amp;L accountability, board-level communication</div>
+          <div class="step-salary">$122K–$200K+</div>
+          <div class="step-certs"><span class="step-cert">PgMP</span><span class="step-cert">MBA optional</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="pathway-timeline"><strong>Typical timeline:</strong> 6–12 years from Analyst to Portfolio Manager · PMP certification adds documented $10–$20K+ salary premium</div>
+  </div>
+</div>
+
+<div class="pathway-card">
+  <div class="pathway-header">
+    <div class="pathway-icon">☁️</div>
+    <h3>Cloud &amp; Infrastructure Track</h3>
+  </div>
+  <div class="pathway-body">
+    <div class="pathway-range">$44K entry → $193K+ senior ceiling</div>
+    <div class="pathway-steps">
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Network Support Specialist / IT Operations</div>
+          <div class="step-meta">0–2 yrs · Help desk, LAN/WAN, ITSM, monitoring, patch management</div>
+          <div class="step-salary">$44K–$88K</div>
+          <div class="step-certs"><span class="step-cert">CompTIA A+</span><span class="step-cert">CompTIA Network+</span><span class="step-cert">ITIL 4</span></div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Systems / DevOps Engineer</div>
+          <div class="step-meta">2–5 yrs · AWS/Azure/GCP, Docker, Kubernetes, CI/CD, Terraform, IAM</div>
+          <div class="step-salary">$96K–$165K</div>
+          <div class="step-certs"><span class="step-cert">AWS Solutions Architect</span><span class="step-cert">CCNA</span><span class="step-cert">CKA</span></div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Cloud Engineer</div>
+          <div class="step-meta">4–8 yrs · Cloud architecture, cost optimization, SRE, multi-cloud strategy</div>
+          <div class="step-salary">$117K–$193K</div>
+          <div class="step-certs"><span class="step-cert">AWS Solutions Architect Prof.</span><span class="step-cert">Azure Architect (AZ-305)</span><span class="step-cert">Terraform Associate</span></div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Cloud Architect / Enterprise Architect</div>
+          <div class="step-meta">7–12 yrs · Enterprise architecture, TOGAF, cross-domain strategy, vendor governance</div>
+          <div class="step-salary">$128K–$193K+</div>
+          <div class="step-certs"><span class="step-cert">TOGAF</span><span class="step-cert">AWS Solutions Architect Prof.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="pathway-timeline"><strong>Typical timeline:</strong> 5–9 years from network support to Cloud Architect · TX Cloud Engineer avg $149K; Dallas avg $160K (Glassdoor, May 2026)</div>
+  </div>
+</div>
+
+</div>
+</div>
+</div>
+<div id="panel-nego" class="tab-panel" role="tabpanel" aria-labelledby="tab-nego">
+<div class="nego-wrap">
+
+<div class="nego-intro">
+  <p>Armed with a graduate degree and verified market data, MS ITM graduates are well-positioned to negotiate effectively. <strong>87% of technology leaders offer higher salaries to candidates with specialized skills</strong> over generalists in the same role (Robert Half 2026, n=430+ tech leaders). Use the strategies below to capture your full market value.</p>
+</div>
+
+<div class="accord-item" id="ac1">
+  <button class="accord-btn" onclick="toggleAccord('ac1')" aria-expanded="false">
+    <div class="accord-label"><div class="accord-num">1</div><div class="accord-title">Know your market value before you negotiate</div></div>
+    <div class="accord-chevron">⌄</div>
+  </button>
+  <div class="accord-body">
+    <p>Never enter a negotiation without data. Use multiple sources and triangulate:</p>
+    <ul>
+      <li><strong>Glassdoor</strong> — filter by Texas location and current year; check sample size (look for 500+ reports for reliability)</li>
+      <li><strong>Robert Half 2026 Technology Salary Guide</strong> — low/mid/high starting salary ranges by role</li>
+      <li><strong>LinkedIn Salary</strong> — useful for specific job titles at named companies</li>
+      <li><strong>Levels.fyi</strong> — essential for software engineering, data science, and product roles at tech companies (includes equity breakdowns)</li>
+      <li><strong>BLS Occupational Outlook Handbook</strong> — national medians for reality-checking outlier data</li>
+    </ul>
+    <div class="highlight">💡 <strong>Key principle:</strong> Salary ranges in this guide represent base salary only. Always research total compensation — bonus, equity, benefits, and 401(k) match can add 20–40% on top of base at larger employers.</div>
+    <p>For Texas specifically: salaries run 5–10% below CA/WA/NY, but the absence of state income tax and housing ~16% below national average provide meaningful net compensation advantages. Run the math on net take-home before accepting any "Texas discount" framing.</p>
+  </div>
+</div>
+
+<div class="accord-item" id="ac2">
+  <button class="accord-btn" onclick="toggleAccord('ac2')" aria-expanded="false">
+    <div class="accord-label"><div class="accord-num">2</div><div class="accord-title">Leverage your MS ITM degree at the offer stage</div></div>
+    <div class="accord-chevron">⌄</div>
+  </button>
+  <div class="accord-body">
+    <p>Your graduate degree is a concrete negotiating lever — use it explicitly:</p>
+    <ul>
+      <li><strong>Target mid-level entry, not bottom of band.</strong> MS-level candidates should negotiate to enter at the mid-level starting salary, not the entry floor. The entry floor is typically set for candidates with only a bachelor's and 0 experience.</li>
+      <li><strong>Name the degree's business-tech intersection.</strong> MS ITM graduates uniquely combine technical fluency with business strategy — this is particularly valuable for TPM, IT PM, ERP Analyst, and Cybersecurity/GRC roles where both skills are required.</li>
+      <li><strong>Quantify capstone outcomes.</strong> "Led a data pipeline project reducing reporting latency by 40%" is more powerful than "completed a capstone in data engineering." Convert academic work into business impact language.</li>
+    </ul>
+    <div class="highlight">💡 <strong>Script example:</strong> "Based on my research using Robert Half 2026 and Glassdoor TX data, the mid-level range for this role in DFW is $X–$Y. Given my MS ITM background and [specific project/skill], I'd like to discuss starting at $[mid-level figure]."</div>
+  </div>
+</div>
+
+<div class="accord-item" id="ac3">
+  <button class="accord-btn" onclick="toggleAccord('ac3')" aria-expanded="false">
+    <div class="accord-label"><div class="accord-num">3</div><div class="accord-title">Use certifications as a negotiating tool</div></div>
+    <div class="accord-chevron">⌄</div>
+  </button>
+  <div class="accord-body">
+    <p>Certifications carry documented salary premiums — disclose them actively:</p>
+    <div class="cert-grid">
+      <div class="cert-card-sm"><div class="cert-name">PMP</div><div class="cert-impact">+$10–20K+ documented premium</div></div>
+      <div class="cert-card-sm"><div class="cert-name">CISSP</div><div class="cert-impact">+$20–40K+ documented premium</div></div>
+      <div class="cert-card-sm"><div class="cert-name">CCSP</div><div class="cert-impact">+15–25% on cloud security roles</div></div>
+      <div class="cert-card-sm"><div class="cert-name">CISA</div><div class="cert-impact">+$10–20K for IT Audit / GRC</div></div>
+      <div class="cert-card-sm"><div class="cert-name">AWS Solutions Architect</div><div class="cert-impact">+$10–25K for cloud roles</div></div>
+      <div class="cert-card-sm"><div class="cert-name">AWS ML Specialty</div><div class="cert-impact">+$12–20K for AI/ML roles</div></div>
+    </div>
+    <p style="margin-top:.75rem">If you hold or are actively pursuing a relevant certification, disclose it — even in-progress certifications signal commitment and can justify a higher offer or a review clause.</p>
+    <div class="highlight">💡 <strong>Tactic:</strong> If accepting an offer at the low end of the range, negotiate a compensation review tied to earning a specified certification within 12 months. Get it in writing.</div>
+  </div>
+</div>
+
+<div class="accord-item" id="ac4">
+  <button class="accord-btn" onclick="toggleAccord('ac4')" aria-expanded="false">
+    <div class="accord-label"><div class="accord-num">4</div><div class="accord-title">Navigate Texas-specific market dynamics</div></div>
+    <div class="accord-chevron">⌄</div>
+  </button>
+  <div class="accord-body">
+    <p>Texas has real geographic nuance that affects your negotiating position:</p>
+    <ul>
+      <li><strong>DFW and Austin command a premium</strong> over Houston and San Antonio for AI, cloud, and cybersecurity roles — typically 8–15% higher. If you're open to geography, use DFW/Austin data even when negotiating a Houston offer.</li>
+      <li><strong>The no-state-income-tax argument cuts both ways.</strong> Employers sometimes use it to justify below-market base offers ("you're already ahead net"). Run the actual math — at $120K, TX vs. CA after state tax is roughly $8–10K net advantage. That doesn't justify a $20K base gap.</li>
+      <li><strong>San Antonio is a specialized hub</strong> for cybersecurity (NSA, USAF Cyber Command, USAA). Demand outpaces local talent supply — cyber candidates have real leverage there.</li>
+      <li><strong>Remote roles at coastal-HQ companies</strong> may pay national or near-coastal rates regardless of your TX location. Always ask about location-adjusted vs. national pay bands.</li>
+    </ul>
+    <div class="highlight">💡 Consulting and contract rates of <strong>$85–$150+/hr</strong> are achievable for experienced ITM professionals with in-demand specializations (SAP, cloud architecture, AI implementation). If going contract, always negotiate rate in addition to title.</div>
+  </div>
+</div>
+
+<div class="accord-item" id="ac5">
+  <button class="accord-btn" onclick="toggleAccord('ac5')" aria-expanded="false">
+    <div class="accord-label"><div class="accord-num">5</div><div class="accord-title">Negotiate beyond base salary</div></div>
+    <div class="accord-chevron">⌄</div>
+  </button>
+  <div class="accord-body">
+    <p>When base salary flexibility is limited, shift to total compensation. Items that are often more negotiable than base:</p>
+    <ul>
+      <li><strong>Signing bonus</strong> — common in tech; one-time, doesn't affect ongoing payroll budgets so managers have more latitude. Target $5–$20K depending on role level.</li>
+      <li><strong>Equity / RSUs</strong> — at publicly traded employers or funded startups, equity grants can significantly exceed base salary over a 4-year vest. Always ask for the grant amount and vesting schedule.</li>
+      <li><strong>Remote / hybrid flexibility</strong> — WFH 3–5 days/week has real financial value (commute costs, time, wardrobe). Quantify it if you're negotiating a lower base for flexibility.</li>
+      <li><strong>Professional development budget</strong> — $3–$5K/year for certifications and training is reasonable to request; it costs the employer little and pays you back in cert premiums.</li>
+      <li><strong>Start date and title</strong> — a higher title (Senior Analyst vs. Analyst) sets a better base for future raises and external offers, even if current salary is similar.</li>
+    </ul>
+    <div class="highlight">💡 <strong>Framing:</strong> "I'm very excited about this role. I've done some research on total compensation for this level in DFW, and I want to make sure we're aligned before I give you a final answer. Is there flexibility on [specific item]?"</div>
+  </div>
+</div>
+
+<div class="accord-item" id="ac6">
+  <button class="accord-btn" onclick="toggleAccord('ac6')" aria-expanded="false">
+    <div class="accord-label"><div class="accord-num">6</div><div class="accord-title">High-ROI certification strategy by career track</div></div>
+    <div class="accord-chevron">⌄</div>
+  </button>
+  <div class="accord-body">
+    <p>Certifications aren't just negotiation tools — they change what jobs you're eligible for and what range you can target. Prioritize by your track:</p>
+    <ul>
+      <li><strong>Data &amp; AI:</strong> Google Data Analytics (entry) → Databricks Certified / AWS Data Engineer (mid) → AWS ML Specialty or Google Professional ML Engineer (senior)</li>
+      <li><strong>Cybersecurity:</strong> CompTIA Security+ (entry, DoD 8570 approved) → CySA+ or CISA (mid) → CISSP + CCSP (senior, $20–40K+ premium each)</li>
+      <li><strong>Project Management:</strong> CAPM (pre-experience) → PMP (after 36 months, +$10–20K) → PgMP (program director level)</li>
+      <li><strong>Cloud / DevOps:</strong> AWS Cloud Practitioner (entry) → AWS Solutions Architect Associate (mid, most recognized in TX) → CKA + Terraform Associate (senior DevOps) → TOGAF (architect)</li>
+      <li><strong>ERP / Enterprise:</strong> Salesforce Admin (accessible, strong ROI for BA/SWIT roles) → SAP S/4HANA Business Analyst or FICO Cert (high value in TX energy/finance)</li>
+    </ul>
+    <div class="highlight">💡 <strong>Sequencing rule:</strong> Get the cert that unlocks the next salary band, not the one that feels most impressive. Security+ before CISSP. AWS Cloud Practitioner before Solutions Architect. CAPM before PMP.</div>
+  </div>
+</div>
+
+</div>
+</div>
+<footer>
+  <p>MS ITM Career Salary Guide — Texas &amp; Southern U.S. · 2026 Edition · For Student Use Only · Confidential</p>
+  <p style="margin-top:4px">Salary data reflects base compensation only (excludes bonuses, equity, commissions, and benefits). All figures verified May 2026 against: <a href="https://www.roberthalf.com/us/en/insights/salary-guide/technology" target="_blank" rel="noopener">Robert Half 2026 Technology Salary Guide</a> · <a href="https://www.glassdoor.com" target="_blank" rel="noopener">Glassdoor</a> (TX-specific data, Apr–May 2026) · <a href="https://www.bls.gov/ooh/" target="_blank" rel="noopener">BLS Occupational Outlook Handbook</a> · <a href="https://www.salary.com" target="_blank" rel="noopener">Salary.com</a> (May 2026). Supplement with real-time research during active job search. Degree plan recommendations reflect Spring 2026 ITM course catalog.</p>
+</footer>
+
+<script>
+const ROLES=[
+{id:"SWE",title:"Software Engineer / Developer",cat:"Engineering",roadmapId:"SWE",salaryCard:"$90K–$175K",
+sal:{start:90,mid:142,senior:175},
+salNote:"Glassdoor TX avg $142K (51,665 reports, May 2026); 25th–75th pct $112K–$183K. Entry raised to $90K to reflect MS-level market entry. Original guide entry of $73K was below current TX market for grad-level candidates.",
+growth:"Strong",growthBLS:"+15% (BLS Software Developers, 2024–34)",growthScore:3,demand:false,
+skills:["Python OOP & Algorithms","SQL / NoSQL Databases","REST APIs & Microservices","Cloud Deployment (AWS / Azure / GCP)","CI/CD & DevOps Pipelines","AI/ML Integration","Secure Coding (OWASP Top 10)","Systems Design & Scalability"],
+certs:["AWS Cloud Practitioner","Python PCEP / PCAP","Docker Certified Associate"],
+txNote:"TX avg $142K statewide; DFW avg $145K; Austin avg $145K (Glassdoor, May 2026). ~5% below national median, offset by no state income tax.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"OPRE 6359",name:"Advanced Statistics for Data Science"},{tier:"Elective",code:"MIS 6363",name:"Cloud Computing Fundamentals"},{tier:"Elective",code:"MIS 6389",name:"AWS Cloud Solution Architecture"},{tier:"Elective",code:"MIS 6341",name:"Applied Machine Learning"},{tier:"Elective",code:"MIS 6399",name:"AI in Business"}],
+links:[{label:"Glassdoor TX salaries",url:"https://www.glassdoor.com/Salaries/texas-software-engineer-salary-SRCH_IL.0,5_IS1347_KO6,23.htm"},{label:"BLS Outlook",url:"https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm"},{label:"Robert Half 2026",url:"https://www.roberthalf.com/us/en/insights/salary-guide/technology"}]},
+
+{id:"DBA",title:"Data / BI Analyst",cat:"Data & AI",roadmapId:"DBA",salaryCard:"$69K–$152K",
+sal:{start:69,mid:90,senior:152},
+salNote:"Glassdoor TX avg $90K (2,068 reports, Mar 2026); 25th–75th pct $69K–$119K; 90th pct $152K. DFW avg $93K. Confirmed accurate vs. original guide.",
+growth:"High",growthBLS:"+35% Data Scientists group (BLS 2024–34)",growthScore:4,demand:false,
+skills:["SQL Advanced Querying","Excel / Power Query","Python pandas / NumPy","Tableau / Power BI","Statistical Analysis & A/B Testing","ETL & Pipeline Literacy","Data Storytelling","KPI & Metrics Design"],
+certs:["Google Data Analytics Certificate","Tableau Desktop Specialist","Microsoft PL-300 (Power BI Data Analyst)"],
+txNote:"TX avg $90K (Glassdoor, 2,068 reports, Mar 2026). DFW avg $93K. Clear ladder to Data Scientist or Analytics Manager.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"OPRE 6301",name:"Statistics and Data Analysis"},{tier:"Elective",code:"MIS 6309",name:"Business Data Warehousing"},{tier:"Elective",code:"MIS 6380",name:"Data Visualization"},{tier:"Elective",code:"MIS 6324",name:"Business Analytics with SAS"},{tier:"Elective",code:"MIS 6347",name:"AWS Cloud Analytics"}],
+links:[{label:"Glassdoor TX salaries",url:"https://www.glassdoor.com/Salaries/texas-data-analyst-salary-SRCH_IL.0,5_IS1347_KO6,18.htm"},{label:"BLS Outlook",url:"https://www.bls.gov/ooh/computer-and-information-technology/data-scientists.htm"},{label:"Robert Half 2026",url:"https://www.roberthalf.com/us/en/job-details/data-analyst-technology"}]},
+
+{id:"DE",title:"Data Engineer",cat:"Data & AI",roadmapId:"DE",salaryCard:"$104K–$210K",
+sal:{start:104,mid:132,senior:210},
+salNote:"Glassdoor TX avg $132K (4,353 reports, May 2026); 25th–75th pct $104K–$169K; 90th pct $210K. Robert Half 2026 national: $127K–$181K. TX range confirmed.",
+growth:"Very High",growthBLS:"Industry demand 50%+ YoY",growthScore:5,demand:false,
+skills:["Python: PySpark / Airflow / dbt","SQL Advanced & Optimization","Cloud Platforms (AWS / GCP / Azure)","ETL/ELT Pipeline Design","Big Data: Spark, Kafka, Databricks","Data Warehouse / Lakehouse (Snowflake)","Data Modeling (Star Schema / Vault)","DataOps / CI-CD for Data Pipelines"],
+certs:["AWS Data Engineer – Associate","Google Professional Data Engineer","Databricks Certified Associate Developer"],
+txNote:"Glassdoor TX avg $132K; 90th pct $210K (4,353 reports, May 2026). One of the fastest-growing data roles nationally.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"OPRE 6359",name:"Advanced Statistics for Data Science"},{tier:"Elective",code:"MIS 6309",name:"Business Data Warehousing"},{tier:"Elective",code:"MIS 6346",name:"Big Data"},{tier:"Elective",code:"MIS 6347",name:"AWS Cloud Analytics"},{tier:"Elective",code:"MIS 6389",name:"AWS Cloud Solution Architecture"}],
+links:[{label:"Glassdoor TX salaries",url:"https://www.glassdoor.com/Salaries/texas-data-engineer-salary-SRCH_IL.0,5_IS1347_KO6,19.htm"},{label:"Robert Half 2026",url:"https://www.roberthalf.com/us/en/job-details/data-engineer"},{label:"BLS Outlook",url:"https://www.bls.gov/ooh/computer-and-information-technology/database-administrators.htm"}]},
+
+{id:"BA",title:"Business / Application Analyst",cat:"Management & Strategy",roadmapId:"BA",salaryCard:"$65K–$145K",
+sal:{start:65,mid:107,senior:145},
+salNote:"BLS median Computer Systems Analyst $107K nationally; Glassdoor TX avg ~$105K. Entry reflects ITM grad without prior analyst experience. Senior cap appropriate for lead analyst level.",
+growth:"Stable",growthBLS:"+9% Computer Systems Analysts (BLS 2024–34)",growthScore:2,demand:false,
+skills:["Business Process Modeling (UML, BPMN)","Requirements Elicitation & Documentation","ERP Systems (SAP, Salesforce)","SQL for Data Investigation","Agile SDLC & Backlog Grooming","UAT Planning & Coordination","Technical Documentation & Process Flows","Stakeholder Communication"],
+certs:["Salesforce Certified Administrator","ITIL 4 Foundation","PMI-PBA (Professional in Business Analysis)"],
+txNote:"~48,150 computer systems analysts employed in TX (BLS). Strong MS ITM fit: bridges business and technology fluency.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"ACCT 6305",name:"Accounting for Managers"},{tier:"Elective",code:"MIS 6319",name:"Enterprise Resource Planning with SAP"},{tier:"Elective",code:"MIS 6378",name:"CRM with Salesforce"},{tier:"Elective",code:"MIS 6360",name:"Agile Project Management"},{tier:"Elective",code:"MIS 6380",name:"Data Visualization"}],
+links:[{label:"BLS Outlook",url:"https://www.bls.gov/ooh/computer-and-information-technology/computer-systems-analysts.htm"}]},
+
+{id:"TMC",title:"Technology / Management Consultant",cat:"Management & Strategy",roadmapId:"TMC",salaryCard:"$75K–$148K",
+sal:{start:75,mid:110,senior:148},
+salNote:"Glassdoor TX avg ~$110K for management consultants. Senior range reflects DFW Deloitte/Accenture market. Confirmed accurate.",
+growth:"High",growthBLS:"+9% Management Analysts (BLS 2024–34)",growthScore:3,demand:false,
+skills:["Digital Strategy & Transformation","IT Architecture Assessment","Change Management","Client Communication & Presentations","Data-Driven Problem Solving","Agile Delivery Frameworks","Financial Modeling & Business Cases","Stakeholder Alignment"],
+certs:["PMP (Project Management Professional)","ITIL 4 Foundation","AWS Cloud Practitioner","MBA (enhances earning potential)"],
+txNote:"Top TX employers: Deloitte, Accenture, Infosys. Vertical specialization in energy, finance, or healthcare commands 10–20% premium.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"BPS 6310",name:"Strategic Management"},{tier:"Elective",code:"MIS 6302",name:"Managing Digital Strategy"},{tier:"Elective",code:"MIS 6313",name:"Managing IT in the Analytics Age"},{tier:"Elective",code:"MIS 6349",name:"Digital Consulting Project"},{tier:"Elective",code:"MIS 6380",name:"Data Visualization"}],
+links:[{label:"BLS Outlook",url:"https://www.bls.gov/ooh/business-and-financial/management-analysts.htm"}]},
+
+{id:"AIML",title:"AI / ML Engineer",cat:"Data & AI",roadmapId:"AIML",salaryCard:"$110K–$193K",
+sal:{start:110,mid:141,senior:193},
+salNote:"Robert Half 2026 national range: $134K–$193K (low–high). TX applies ~5% discount → effective $127K–$184K. Guide range ($110K–$183K) is appropriate for MS-level TX entry through senior. 4.4% salary growth — highest in IT sector (Robert Half 2026).",
+growth:"Highest nationally",growthBLS:"LinkedIn #1 fastest-growing role (2025); +4.4% salary growth (Robert Half 2026)",growthScore:5,demand:true,
+skills:["Python Deep Learning (PyTorch / TensorFlow)","MLOps & Model Deployment (MLflow, SageMaker)","LLMs & Prompt Engineering","Vector Databases (Pinecone, Weaviate)","Cloud ML Services (AWS SageMaker / Azure ML)","Feature Engineering & Model Evaluation","A/B Testing for Model Performance","Responsible AI Principles & Governance"],
+certs:["AWS Certified Machine Learning – Specialty","Azure AI Engineer Associate","Google Professional ML Engineer"],
+txNote:"DFW & Austin approaching national parity. Robert Half 2026 national midpoint $170K. 4.4% projected salary growth — highest in IT sector.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"OPRE 6359",name:"Advanced Statistics for Data Science"},{tier:"Elective",code:"MIS 6341",name:"Applied Machine Learning"},{tier:"Elective",code:"MIS 6347",name:"AWS Cloud Analytics"},{tier:"Elective",code:"MIS 6389",name:"AWS Cloud Solution Architecture"},{tier:"Elective",code:"MIS 6391",name:"Responsible AI & Ethical Governance"}],
+links:[{label:"Robert Half 2026",url:"https://www.roberthalf.com/us/en/insights/research/data-reveals-which-technology-roles-are-in-highest-demand"},{label:"BLS Outlook",url:"https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm"}]},
+
+{id:"PM",title:"Product Manager",cat:"Management & Strategy",roadmapId:"PM",salaryCard:"$113K–$194K",
+sal:{start:113,mid:154,senior:194},
+salNote:"Glassdoor TX: avg $155K, 25th–75th pct $113K–$194K (5,983 reports, Mar 2026). Austin avg $154K confirmed. Range is accurate.",
+growth:"High",growthBLS:"Strong market demand; TPM roles in particular high demand",growthScore:4,demand:true,
+skills:["Product Roadmapping & Prioritization","User Story Writing & Acceptance Criteria","A/B Testing & Experimentation","Market Research & Competitive Analysis","Agile / Scrum Methodology","Stakeholder Management","Data Analytics for Product Decisions","Go-To-Market Strategy"],
+certs:["CSPO (Certified Scrum Product Owner)","PMI-ACP (Agile Certified Practitioner)","Google Project Management Certificate"],
+txNote:"Glassdoor TX avg $155K (5,983 reports, Mar 2026). Technical Product Manager (TPM) commands premium — strong MS ITM fit.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"MKT 6301",name:"Marketing Management"},{tier:"Elective",code:"MIS 6393",name:"Foundations of Digital Product Management"},{tier:"Elective",code:"MIS 6396",name:"User Experience Design"},{tier:"Elective",code:"MIS 6375",name:"Technology Strategies & New Product Development"},{tier:"Elective",code:"MIS 6397",name:"IT and AI Strategy & Innovation"}],
+links:[{label:"Glassdoor TX salaries",url:"https://www.glassdoor.com/Salaries/texas-product-manager-salary-SRCH_IL.0,5_IS1347_KO6,21.htm"}]},
+
+{id:"PGM",title:"Program / Project Manager",cat:"Management & Strategy",roadmapId:"PGM",salaryCard:"$80K–$165K",
+sal:{start:80,mid:130,senior:165},
+salNote:"Glassdoor TX: IT Project Manager avg $130K, 25th–75th pct $104K–$164K (1,390 reports, Apr 2026). Senior raised from $148K (original guide) to $165K to better reflect 75th pct. Confirmed.",
+growth:"Stable–High",growthBLS:"+6% Project Mgmt Specialists (BLS 2024–34)",growthScore:3,demand:false,
+skills:["PMP Methodology (Waterfall & Hybrid)","Stakeholder Reporting & Executive Communication","Risk Management & Issue Resolution","MS Project / JIRA / Smartsheet","Portfolio & Budget Tracking","Agile / Scrum / SAFe Frameworks","Change Management","Vendor & Contract Management"],
+certs:["PMP (Project Management Professional)","CAPM (Certified Associate in Project Mgmt)","PgMP (Program Management Professional)","PMI-ACP (Agile Certified Practitioner)"],
+txNote:"Glassdoor TX: IT Project Manager avg $130K (Apr 2026). PMP certification adds documented $10–$20K+ salary premium. DFW program manager avg $122K.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"FIN 6301",name:"Financial Management"},{tier:"Elective",code:"MIS 6360",name:"Agile Project Management"},{tier:"Elective",code:"MIS 6380",name:"Data Visualization"},{tier:"Elective",code:"MIS 6302",name:"Managing Digital Strategy"},{tier:"Elective",code:"MIS 6397",name:"IT and AI Strategy & Innovation"}],
+links:[{label:"Glassdoor TX salaries",url:"https://www.glassdoor.com/Salaries/texas-project-manager-it-projects-salary-SRCH_IL.0,5_IS1347_KO6,33.htm"},{label:"PMI salary survey",url:"https://www.pmi.org/learning/careers/project-management-salary-survey"},{label:"BLS Outlook",url:"https://www.bls.gov/ooh/management/project-management-specialists.htm"}]},
+
+{id:"MKT",title:"Marketing / Account / Customer Success",cat:"Management & Strategy",roadmapId:"MKT",salaryCard:"$60K–$140K",
+sal:{start:60,mid:90,senior:140},
+salNote:"Glassdoor TX avg $90K for marketing/digital analyst roles. Range reflects broad category spanning entry CS to senior digital strategist. Confirmed reasonable.",
+growth:"Moderate",growthBLS:"+7% Market Research Analysts (BLS 2024–34)",growthScore:2,demand:false,
+skills:["Digital Marketing Analytics","CRM: Salesforce / HubSpot","SEO, SEM & Paid Media","A/B Testing & Conversion Optimization","Marketing Attribution Modeling","Customer Segmentation & Lifetime Value","Data Storytelling with Dashboards","AI-Driven Automation & Personalization"],
+certs:["Google Analytics 4 Certificate","HubSpot Marketing Certification","Salesforce Certified Marketing Cloud Specialist"],
+txNote:"Strong demand in DFW tech corridor. AI-fluent marketers command 15–25% premium. Highly variable comp depending on industry vertical and channel mix.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"MKT 6321",name:"Interactive and Digital Marketing"},{tier:"Elective",code:"MIS 6378",name:"CRM with Salesforce"},{tier:"Elective",code:"MIS 6344",name:"Web Analytics"},{tier:"Elective",code:"MIS 6373",name:"AI-Driven Social Media Automation"},{tier:"Elective",code:"MIS 6380",name:"Data Visualization"}],
+links:[{label:"BLS Outlook",url:"https://www.bls.gov/ooh/business-and-financial/market-research-analysts.htm"}]},
+
+{id:"DS",title:"Data Scientist",cat:"Data & AI",roadmapId:"DS",salaryCard:"$126K–$207K",
+sal:{start:126,mid:161,senior:207},
+salNote:"Glassdoor TX avg $161K (3,825 reports, Apr 2026); 25th–75th pct $126K–$207K — 4% above national median. Robert Half 2026 national midpoint $154K. Range confirmed accurate.",
+growth:"Very High",growthBLS:"+35% (BLS Data Scientists, 2024–34)",growthScore:5,demand:true,
+skills:["Python / R Statistical Modeling","Machine Learning (supervised & unsupervised)","A/B Testing & Causal Inference","Data Wrangling at Scale (pandas, Spark)","SQL + Cloud Data Warehouses","Model Explainability (SHAP, LIME)","Business Storytelling & Executive Reporting","NLP & Text Analytics"],
+certs:["AWS Certified Machine Learning – Specialty","Google Professional Data Engineer","Databricks Certified Associate Developer"],
+txNote:"Glassdoor TX avg $161K — 4% above national median (3,825 reports, Apr 2026). Highest data-field earning potential. 4.1% salary growth projected (Robert Half 2026).",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"OPRE 6359",name:"Advanced Statistics for Data Science"},{tier:"Elective",code:"MIS 6341",name:"Applied Machine Learning"},{tier:"Elective",code:"MIS 6386",name:"Modeling for Business Analytics"},{tier:"Elective",code:"MIS 6380",name:"Data Visualization"},{tier:"Elective",code:"MIS 6346",name:"Big Data"}],
+links:[{label:"Glassdoor TX salaries",url:"https://www.glassdoor.com/Salaries/texas-data-scientist-salary-SRCH_IL.0,5_IS1347_KO6,20.htm"},{label:"Robert Half 2026",url:"https://www.roberthalf.com/us/en/job-details/data-scientist"},{label:"BLS Outlook",url:"https://www.bls.gov/ooh/computer-and-information-technology/data-scientists.htm"}]},
+
+{id:"SYSDEV",title:"Systems / DevOps Engineer",cat:"Engineering",roadmapId:"SYSDEV",salaryCard:"$96K–$190K",
+sal:{start:96,mid:146,senior:190},
+salNote:"Robert Half 2026: DevOps Engineer $118K–$174K national; Cloud Engineer Glassdoor TX avg $149K (25th–75th pct $117K–$193K, May 2026). Combined range confirmed for Systems/DevOps hybrid.",
+growth:"Very High",growthBLS:"+15% Software Developers group (BLS 2024–34); DevOps +3.0% salary growth (Robert Half 2026)",growthScore:4,demand:true,
+skills:["Linux / Windows Server Administration","Docker & Kubernetes (container orchestration)","CI/CD Pipelines (Jenkins / GitHub Actions)","Infrastructure as Code (Terraform / Ansible)","Cloud Platforms (AWS / Azure / GCP)","Identity & Access Management","Network Security & Monitoring","Observability: Prometheus, Grafana, Splunk"],
+certs:["AWS Solutions Architect – Associate","CKA (Certified Kubernetes Administrator)","Azure Administrator (AZ-104)","HashiCorp Terraform Associate"],
+txNote:"Dell, TI, AMD drive strong Austin/DFW demand. Cloud + DevOps combination commands 15–25% premium. Motion Recruitment DFW: Site Reliability Engineer $145K–$176K (2025).",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"OPRE 6302",name:"Operations Management"},{tier:"Elective",code:"MIS 6363",name:"Cloud Computing Fundamentals"},{tier:"Elective",code:"MIS 6389",name:"AWS Cloud Solution Architecture"},{tier:"Elective",code:"MIS 6347",name:"AWS Cloud Analytics"},{tier:"Elective",code:"MIS 6351",name:"Identity and Access Management"}],
+links:[{label:"Robert Half 2026",url:"https://www.roberthalf.com/us/en/insights/salary-guide/technology"},{label:"Glassdoor TX Cloud Engineer",url:"https://www.glassdoor.com/Salaries/texas-cloud-engineer-salary-SRCH_IL.0,5_IS1347_KO6,20.htm"},{label:"BLS Outlook",url:"https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm"}]},
+
+{id:"ITOPS",title:"IT Operations",cat:"Infrastructure",roadmapId:"ITOPS",salaryCard:"$55K–$120K",
+sal:{start:55,mid:88,senior:120},
+salNote:"Robert Half 2026: Systems Administrator $80K–$118K national (low–high). BLS median $95K for Network/Computer Sys Admins. TX range confirmed at modest discount to national.",
+growth:"Stable",growthBLS:"Varies by sub-role; network admins –3% (BLS 2024–34); cloud-focused ops roles growing",growthScore:2,demand:false,
+skills:["Network Administration (LAN / WAN / VPN)","Help Desk & ITSM (ServiceNow, Jira Service)","IT Asset Management","Cloud Infrastructure Monitoring (CloudWatch, Azure Monitor)","ITIL Service Management Framework","Virtualization (VMware / Hyper-V)","Security Fundamentals & Patch Management","Backup, Recovery & Business Continuity"],
+certs:["CompTIA Network+","CCNA (Cisco Certified Network Associate)","ITIL 4 Foundation","AWS Cloud Practitioner"],
+txNote:"AT&T and telecom sector boost TX network support demand. Clear ladder to cloud engineer or systems architect roles from IT Ops entry.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"OPRE 6302",name:"Operations Management"},{tier:"Elective",code:"MIS 6363",name:"Cloud Computing Fundamentals"},{tier:"Elective",code:"MIS 6389",name:"AWS Cloud Solution Architecture"},{tier:"Elective",code:"MIS 6330",name:"Cybersecurity Fundamentals"},{tier:"Elective",code:"MIS 6368",name:"Applied Cybersecurity Analytics"}],
+links:[{label:"BLS Outlook",url:"https://www.bls.gov/ooh/computer-and-information-technology/network-and-computer-systems-administrators.htm"},{label:"Robert Half 2026",url:"https://www.roberthalf.com/us/en/insights/salary-guide/technology"}]},
+
+{id:"CYBER",title:"Cybersecurity / GRC Analyst",cat:"Cybersecurity",roadmapId:"CYBER",salaryCard:"$74K–$167K",
+sal:{start:74,mid:125,senior:167},
+salNote:"Glassdoor TX avg $124K (818 reports, Apr 2026); 25th–75th pct $95K–$164K; DFW avg $130K. Senior set to $167K (between 75th pct $164K and 80th pct) — original guide's $206K was the 90th pct ceiling, not a representative senior target. 4.0% salary growth (Robert Half 2026).",
+growth:"Very High",growthBLS:"+29% Information Security Analysts (BLS 2024–34)",growthScore:5,demand:true,
+skills:["Threat Detection & SIEM (Splunk, QRadar)","Risk Frameworks (NIST CSF, ISO 27001)","Vulnerability Assessment & Pen Testing Basics","IAM & Zero Trust Architecture","SOC Operations (Tier 1–3)","Compliance: SOX, HIPAA, PCI-DSS, CMMC","Cloud Security (AWS Security Hub, Azure Defender)","Incident Response & Digital Forensics"],
+certs:["CompTIA Security+","CISSP (Certified Information Systems Security Professional)","CCSP (Certified Cloud Security Professional)","CySA+ (CompTIA Cybersecurity Analyst)","CISA (Certified Information Systems Auditor)","CRISC (Certified in Risk & Info Systems Control)"],
+txNote:"Glassdoor DFW avg $130K; TX avg $124K (Apr 2026). San Antonio a major hub (NSA, USAF Cyber Command). Cloud Security Engineer sub-specialty commands 15–25% additional premium.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"ACCT 6386",name:"Governance, Risk Management & Compliance"},{tier:"Elective",code:"MIS 6330",name:"Cybersecurity Fundamentals"},{tier:"Elective",code:"MIS 6368",name:"Applied Cybersecurity Analytics"},{tier:"Elective",code:"MIS 6337",name:"IT Audit & Risk Management"},{tier:"Elective",code:"MIS 6333",name:"Digital Forensics & Incident Management"}],
+links:[{label:"Glassdoor TX salaries",url:"https://www.glassdoor.com/Salaries/texas-cyber-security-analyst-salary-SRCH_IL.0,5_IS1347_KO6,28.htm"},{label:"BLS Outlook",url:"https://www.bls.gov/ooh/computer-and-information-technology/information-security-analysts.htm"},{label:"ISACA certifications",url:"https://www.isaca.org/credentialing"}]},
+
+{id:"FA",title:"Financial Analyst",cat:"Management & Strategy",roadmapId:"FA",salaryCard:"$75K–$135K",
+sal:{start:75,mid:106,senior:135},
+salNote:"BLS median Financial Analyst $99K nationally; TX typically 5–10% below coastal metros. Glassdoor TX avg ~$105K for Financial Analysts. Senior range reflects DFW financial services market. Confirmed accurate.",
+growth:"Steady",growthBLS:"+6% Financial Analysts (BLS 2024–34)",growthScore:2,demand:false,
+skills:["Financial Modeling (Excel, Python)","ERP Financial Modules (SAP FICO)","BI & Financial Dashboards (Power BI)","Accounting Systems & Internal Controls","SQL for Financial Reporting","AI/ML for Risk & Fraud Detection","SOX Compliance & Internal Audit","FP&A: Budgeting, Forecasting, Variance Analysis"],
+certs:["CPA (Certified Public Accountant)","CFA Level I","SAP FICO Certification","FRM (Financial Risk Manager)","CMA (Certified Management Accountant)"],
+txNote:"Houston avg $129K for ERP/Finance Analyst roles. DFW financial services sector strong. SAP + finance expertise particularly valued in TX energy sector.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"ACCT 6305",name:"Accounting for Managers"},{tier:"Elective",code:"MIS 6319",name:"Enterprise Resource Planning with SAP"},{tier:"Elective",code:"MIS 6338",name:"Accounting Systems Integration"},{tier:"Elective",code:"MIS 6337",name:"IT Audit & Risk Management"},{tier:"Elective",code:"MIS 6380",name:"Data Visualization"}],
+links:[{label:"BLS Outlook",url:"https://www.bls.gov/ooh/business-and-financial/financial-analysts.htm"}]},
+
+{id:"ITAUD",title:"IT Auditor",cat:"Cybersecurity",roadmapId:"ITAUD",salaryCard:"$75K–$148K",
+sal:{start:75,mid:108,senior:148},
+salNote:"BLS median Accountants & Auditors $79K nationally; IT Auditors command significant premium. Glassdoor DFW avg ~$120K for IT Audit roles. CISA holders earn toward upper range. Confirmed accurate.",
+growth:"Steady",growthBLS:"+5% Accountants & Auditors (BLS 2024–34)",growthScore:2,demand:false,
+skills:["IT Audit Methodology (IIA Standards, ISACA)","CISA / CIA Frameworks","COBIT 2019 Governance & IT General Controls","Automated Audit Tools (ACL / IDEA / Galvanize)","ERP System Auditing (SAP, Oracle)","Data Analytics for Audit Evidence","SOX Compliance & Internal Controls Testing","Fraud Detection & Forensic Analytics"],
+certs:["CISA (Certified Information Systems Auditor)","CIA (Certified Internal Auditor)","CRISC (Certified in Risk & Info Systems Control)","CPA with IT Audit Focus"],
+txNote:"Dallas is a top-paying U.S. city for IT Audit roles. High demand in financial services, healthcare, and government contracting. CISA is the benchmark credential.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"ACCT 6336",name:"IT Audit & Risk Management"},{tier:"Elective",code:"MIS 6337",name:"IT Audit & Risk Management"},{tier:"Elective",code:"MIS 6339",name:"Analytical Reviews Using Audit Software"},{tier:"Elective",code:"MIS 6394",name:"Internal Audit"},{tier:"Elective",code:"MIS 6368",name:"Applied Cybersecurity Analytics"}],
+links:[{label:"ISACA — CISA",url:"https://www.isaca.org/credentialing/cisa"},{label:"BLS Outlook",url:"https://www.bls.gov/ooh/business-and-financial/accountants-and-auditors.htm"}]},
+
+{id:"QA",title:"Quality Assurance / Software Tester",cat:"Engineering",roadmapId:"QA",salaryCard:"$58K–$145K",
+sal:{start:58,mid:108,senior:145},
+salNote:"Glassdoor TX avg ~$100K for QA Engineers. BLS groups with SWE (+15%). QA automation roles command 30–50% premium over manual testing. Range confirmed.",
+growth:"Evolving",growthBLS:"+15% Software Developers/QA group (BLS 2024–34)",growthScore:3,demand:false,
+skills:["Test Automation: Python PyTest / Selenium / Playwright","Manual Testing: Functional, Regression, UAT","CI/CD Integration & DevOps Testing","API Testing: Postman / REST Assured","Performance & Load Testing (JMeter, k6)","JIRA & TestRail for Test Management","UX / Usability Testing & Accessibility (WCAG)","AI-Driven Testing Tools"],
+certs:["ISTQB Foundation Level","Certified Agile Tester (CAT)","AWS Cloud Practitioner"],
+txNote:"QA automation significantly outearns manual testing — 30–50% premium common. Automation skills essential for career advancement. Strong demand in Austin fintech and DFW enterprise software.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"OPRE 6301",name:"Statistics and Data Analysis"},{tier:"Elective",code:"MIS 6396",name:"User Experience Design"},{tier:"Elective",code:"MIS 6360",name:"Agile Project Management"},{tier:"Elective",code:"MIS 6393",name:"Foundations of Digital Product Management"},{tier:"Elective",code:"MIS 6392",name:"Causal Analytics & A/B Testing"}],
+links:[{label:"BLS Outlook",url:"https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm"},{label:"ISTQB certification",url:"https://www.istqb.org/certifications/foundation-level"}]},
+
+{id:"SWIT",title:"Software / IT Analyst",cat:"Engineering",roadmapId:"SWIT",salaryCard:"$65K–$120K",
+sal:{start:65,mid:90,senior:120},
+salNote:"BLS Computer Systems Analysts median $107K nationally; TX slightly below. Glassdoor TX avg ~$100K. Entry reflects 0–2 yrs experience; senior cap reflects lead analyst without full management scope. Confirmed.",
+growth:"Stable",growthBLS:"+9% Computer Systems Analysts (BLS 2024–34)",growthScore:2,demand:false,
+skills:["Systems Analysis: UML, Use Cases, ERDs","Python / SQL for Data Investigation","ERP & App Analysis (SAP, Salesforce)","Agile SDLC & Backlog Grooming","UAT Planning & Coordination","Web Tech: HTML, CSS, REST APIs","Technical Documentation & Process Flows","AI Literacy in Business Systems"],
+certs:["Salesforce Certified Administrator","ITIL 4 Foundation","SAP S/4HANA Business Analyst"],
+txNote:"Strong MS ITM fit: bridges business and technology. Excellent entry role for grads without prior IT experience. Clear ladder to Business Analyst or PM roles.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"ACCT 6305",name:"Accounting for Managers"},{tier:"Elective",code:"MIS 6319",name:"Enterprise Resource Planning with SAP"},{tier:"Elective",code:"MIS 6378",name:"CRM with Salesforce"},{tier:"Elective",code:"MIS 6332",name:"ERP Configurations & Implementation"},{tier:"Elective",code:"MIS 6360",name:"Agile Project Management"}],
+links:[{label:"BLS Outlook",url:"https://www.bls.gov/ooh/computer-and-information-technology/computer-systems-analysts.htm"}]},
+
+{id:"SCA",title:"Supply Chain Analyst",cat:"Management & Strategy",roadmapId:"SCA",salaryCard:"$65K–$140K",
+sal:{start:65,mid:95,senior:140},
+salNote:"BLS Logisticians median $79K nationally; supply chain analysts with ERP/tech skills command premium. Glassdoor TX avg $90–$110K for tech-enabled supply chain roles. Senior reflects SAP SCM specialist level. Confirmed.",
+growth:"High",growthBLS:"+17% Logisticians (BLS 2024–34)",growthScore:4,demand:false,
+skills:["ERP Supply Chain: SAP S/4HANA, SAP IBP","Data Analytics: Python, R, Tableau","Demand Forecasting & MRP","AI/ML for Demand Sensing","IoT & Real-Time Logistics Visibility","Blockchain for Supply Chain Traceability","Supply Chain Risk & Resilience Planning","ESG / Scope 3 Emissions Reporting"],
+certs:["CSCP (APICS Certified Supply Chain Professional)","CPIM (Certified in Planning & Inventory Mgmt)","SAP IBP Certification","Google Data Analytics Certificate"],
+txNote:"TX energy, manufacturing, and logistics sectors drive strong demand. Houston petrochemical supply chain and DFW logistics hub are top markets. SAP + supply chain expertise highly valued.",
+courses:[{tier:"Core",code:"MIS 6382",name:"Object-Oriented Programming in Python"},{tier:"Core",code:"BUAN 6320",name:"Database Foundations for Business Analytics"},{tier:"Core",code:"MIS 6308",name:"Systems Analysis & Project Management"},{tier:"Biz",code:"OPRE 6302",name:"Operations Management"},{tier:"Elective",code:"MIS 6369",name:"Supply Chain Software with SAP"},{tier:"Elective",code:"MIS 6319",name:"Enterprise Resource Planning with SAP"},{tier:"Elective",code:"MIS 6374",name:"Internet of Things"},{tier:"Elective",code:"MIS 6398",name:"Blockchain Technology & Applications"}],
+links:[{label:"BLS Outlook",url:"https://www.bls.gov/ooh/business-and-financial/logisticians.htm"},{label:"APICS / ASCM certifications",url:"https://www.ascm.org/certifications/"}]}
+];
+
+const CAT={"Data & AI":{chip:"cat-data",border:"cat-data-border"},"Engineering":{chip:"cat-eng",border:"cat-eng-border"},"Cybersecurity":{chip:"cat-cyber",border:"cat-cyber-border"},"Management & Strategy":{chip:"cat-mgmt",border:"cat-mgmt-border"},"Infrastructure":{chip:"cat-infra",border:"cat-infra-border"}};
+
+let activeCat="All",activeSort="alpha",selectedId=null;
+
+function setSort(s,btn){activeSort=s;document.querySelectorAll(".sort-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");render()}
+function setCategory(btn){activeCat=btn.dataset.cat;document.querySelectorAll(".filter-chip").forEach(b=>b.classList.remove("active"));btn.classList.add("active");render()}
+
+function render(){
+  const q=document.getElementById("searchInput").value.toLowerCase().trim();
+  let list=ROLES.filter(r=>{
+    if(activeCat!=="All"&&r.cat!==activeCat)return false;
+    if(!q)return true;
+    return r.title.toLowerCase().includes(q)||r.cat.toLowerCase().includes(q)||r.skills.some(s=>s.toLowerCase().includes(q))||r.certs.some(c=>c.toLowerCase().includes(q))||r.id.toLowerCase().includes(q)||r.courses.some(c=>c.name.toLowerCase().includes(q)||c.code.toLowerCase().includes(q));
+  });
+  if(activeSort==="alpha")list.sort((a,b)=>a.title.localeCompare(b.title));
+  if(activeSort==="salary")list.sort((a,b)=>b.sal.senior-a.sal.senior);
+  if(activeSort==="growth")list.sort((a,b)=>b.growthScore-a.growthScore);
+  document.getElementById("countLabel").textContent=list.length===ROLES.length?`Showing all ${ROLES.length} career paths`:`Showing ${list.length} of ${ROLES.length} paths`;
+  const grid=document.getElementById("cardGrid");
+  if(!list.length){grid.innerHTML='<div class="no-results">No roles match — try a different search or filter.</div>';return}
+  grid.innerHTML=list.map((r,i)=>{const cc=CAT[r.cat];const sel=selectedId===r.id?" selected":"";return`<div class="card ${cc.border}${sel}" role="listitem" onclick="selectRole('${r.id}')" tabindex="0" onkeydown="if(event.key==='Enter')selectRole('${r.id}')" aria-label="${r.title}" style="animation-delay:${i*0.02}s"><span class="card-cat ${cc.chip}">${r.cat}</span><div class="card-title">${r.title}</div><div class="card-salary">TX base range: ${r.salaryCard}</div><div class="card-growth">${r.growth} · ${r.growthBLS}</div>${r.demand?'<div class="demand-pill">🔥 High Demand</div>':""}</div>`;}).join("");
+  if(selectedId&&list.find(r=>r.id===selectedId))renderDetail(list.find(r=>r.id===selectedId));
+  else if(selectedId&&!list.find(r=>r.id===selectedId)){selectedId=null;document.getElementById("detail-panel").style.display="none";}
+}
+
+function selectRole(id){
+  if(selectedId===id){selectedId=null;document.getElementById("detail-panel").style.display="none";document.querySelectorAll(".card").forEach(c=>c.classList.remove("selected"));return}
+  selectedId=id;
+  const r=ROLES.find(x=>x.id===id);
+  document.querySelectorAll(".card").forEach(c=>c.classList.remove("selected"));
+  document.querySelectorAll(".card").forEach(c=>{if(c.getAttribute("aria-label")===r.title)c.classList.add("selected")});
+  renderDetail(r);
+  setTimeout(()=>document.getElementById("detail-panel").scrollIntoView({behavior:"smooth",block:"nearest"}),50);
+}
+
+function renderDetail(r){
+  const panel=document.getElementById("detail-panel");
+  panel.style.display="block";
+  const MAX=220;
+  const BC=["#9ecfba","#2d8f62","#154734"];
+  const SL=[{label:"Entry · 0–3 yrs",val:r.sal.start},{label:"Mid · 3–7 yrs",val:r.sal.mid},{label:"Senior · 8+ yrs",val:r.sal.senior}];
+  const tc=t=>t==="Core"?"tier-core":t==="Biz"?"tier-biz":"tier-elec";
+  const extIcon=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
+  const linksHtml=r.links&&r.links.length?`<div class="links-row">${r.links.map(l=>`<a class="ext-link" href="${l.url}" target="_blank" rel="noopener noreferrer">${extIcon}${l.label}</a>`).join("")}<span class="links-note">Verify salary data with current sources before negotiations</span></div>`:"";
+  panel.innerHTML=`<div class="detail-header"><div class="detail-header-left"><h2>${r.title}</h2><div class="subtitle">${r.cat} &nbsp;·&nbsp; Roadmap ID: ${r.roadmapId} &nbsp;·&nbsp; ${r.txNote}</div></div><button class="close-btn" onclick="selectRole('${r.id}')" aria-label="Close detail panel">✕ Close</button></div><div class="detail-body"><div class="detail-grid"><div class="detail-box"><div class="detail-box-label">Texas base salary — by experience level</div>${SL.map((sl,i)=>`<div class="salary-row"><span class="sal-label" style="width:98px">${sl.label}</span><div class="sal-track"><div class="sal-fill" style="width:${Math.round(sl.val/MAX*100)}%;background:${BC[i]}"></div></div><span class="sal-val">$${sl.val}K</span></div>`).join("")}<div style="font-size:10px;color:#999;margin-top:8px;font-style:italic">${r.salNote}</div></div><div class="detail-box"><div class="detail-box-label">Job market outlook</div><div class="growth-text"><strong>${r.growth}</strong> — ${r.growthBLS}</div>${r.demand?'<div class="demand-pill" style="font-size:11px;padding:4px 10px">🔥 High Demand — candidates have negotiating leverage</div>':""}<div style="font-size:10px;color:#999;margin-top:10px;font-style:italic">Base salary only · excludes bonus, equity, commissions, and benefits</div></div></div><div class="detail-grid"><div class="detail-box"><div class="detail-box-label">Key 2025–26 market skills</div><div class="tag-wrap">${r.skills.map(s=>`<span class="tag">${s}</span>`).join("")}</div></div><div class="detail-box"><div class="detail-box-label">Target certifications</div><div class="tag-wrap">${r.certs.map(c=>`<span class="cert-tag">${c}</span>`).join("")}</div></div></div><div class="courses-section"><div class="courses-label">Recommended degree plan (key courses)</div><table class="course-table" aria-label="Course recommendations for ${r.title}"><thead><tr style="display:none"><th>Tier</th><th>Code</th><th>Course</th></tr></thead><tbody>${r.courses.map(c=>`<tr><td><span class="tier-badge ${tc(c.tier)}">${c.tier}</span></td><td class="code-cell">${c.code}</td><td class="name-cell">${c.name}</td></tr>`).join("")}</tbody></table></div>${linksHtml}</div>`;
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-selected','false');
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab).setAttribute('aria-selected','true');
+  document.getElementById('panel-'+tab).classList.add('active');
+  // show/hide toolbar (only relevant on roles tab)
+  document.querySelector('.toolbar').style.display = (tab==='roles') ? '' : 'none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleAccord(id) {
+  const item = document.getElementById(id);
+  const btn = item.querySelector('.accord-btn');
+  const isOpen = item.classList.contains('open');
+  // close all first
+  document.querySelectorAll('.accord-item').forEach(a => {
+    a.classList.remove('open');
+    a.querySelector('.accord-btn').setAttribute('aria-expanded','false');
+  });
+  if (!isOpen) {
+    item.classList.add('open');
+    btn.setAttribute('aria-expanded','true');
+  }
+}
+
+render();
+</script>
+</body>
+</html>
